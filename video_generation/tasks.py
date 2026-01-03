@@ -6,7 +6,7 @@ from .services.veo_service import VeoService
 from .services.heygen_service import HeyGenService
 from .services.merge_service import merge_scene_urls_to_gcs
 
-@shared_task
+@shared_task(queue='renderly')
 def process_video_job(job_id):
     job = VideoJob.objects.get(id=job_id)
     try:

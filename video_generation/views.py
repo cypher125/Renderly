@@ -83,7 +83,7 @@ class VideoGenerationViewSet(viewsets.GenericViewSet):
             if use_inline:
                 threading.Thread(target=lambda: process_video_job.apply(args=[str(job.id)])).start()
             else:
-                process_video_job.delay(str(job.id))
+                process_video_job.apply_async(args=[str(job.id)], queue='renderly')
         except Exception:
             threading.Thread(target=lambda: process_video_job.apply(args=[str(job.id)])).start()
         return Response({
