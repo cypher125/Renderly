@@ -57,6 +57,7 @@ WSGI_APPLICATION = 'renderly.wsgi.application'
 
 DB_CONN_MAX_AGE = int(os.getenv('DB_CONN_MAX_AGE', '600'))
 DB_SSL_REQUIRE = os.getenv('DB_SSL_REQUIRE', 'False') == 'True'
+RUN_TASK_INLINE = os.getenv('RUN_TASK_INLINE', 'False') == 'True'
 PGHOST = os.getenv('PGHOST')
 PGPORT = os.getenv('PGPORT', '5432')
 PGUSER = os.getenv('PGUSER')

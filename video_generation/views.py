@@ -15,6 +15,7 @@ from drf_spectacular.utils import (
 from drf_spectacular.types import OpenApiTypes
 from django.utils import timezone
 import redis
+import threading
 
 class VideoGenerationViewSet(viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated]
@@ -72,9 +73,19 @@ class VideoGenerationViewSet(viewsets.GenericViewSet):
             status='pending'
         )
         try:
-            process_video_job.delay(str(job.id))
+            broker_ok = True
+            try:
+                r = redis.Redis.from_url(settings.CELERY_BROKER_URL)
+                r.ping()
+            except Exception:
+                broker_ok = False
+            use_inline = getattr(settings, 'RUN_TASK_INLINE', False) or not broker_ok
+            if use_inline:
+                threading.Thread(target=lambda: process_video_job.apply(args=[str(job.id)])).start()
+            else:
+                process_video_job.delay(str(job.id))
         except Exception:
-            process_video_job.apply(args=[str(job.id)])
+            threading.Thread(target=lambda: process_video_job.apply(args=[str(job.id)])).start()
         return Response({
             'job_id': str(job.id),
             'status': 'pending',
