@@ -98,6 +98,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+APPEND_SLASH = False
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -111,11 +112,16 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
+VEO_LOCATION = os.getenv('VEO_LOCATION', 'us-central1')
+VEO_MODEL_NAME = os.getenv('VEO_MODEL_NAME', 'veo-3.1')
+
 GCP_PROJECT_ID = os.getenv('GCP_PROJECT_ID')
 GCP_SERVICE_ACCOUNT_FILE = os.getenv('GCP_SERVICE_ACCOUNT_FILE')
 GCS_BUCKET = os.getenv('GCS_BUCKET', 'bucket')
 
 HEYGEN_API_KEY = os.getenv('HEYGEN_API_KEY')
+BG_MUSIC_URLS = [u.strip() for u in os.getenv('BG_MUSIC_URLS', '').split(',') if u.strip()]
+BG_MUSIC_VOLUME = float(os.getenv('BG_MUSIC_VOLUME', '0.2'))
 
 CELERY_BROKER_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
 CELERY_RESULT_BACKEND = os.getenv('REDIS_URL', 'redis://localhost:6379/0')

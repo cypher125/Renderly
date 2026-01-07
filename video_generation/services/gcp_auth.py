@@ -39,12 +39,21 @@ class GCPAuthManager:
     def _needs_refresh(self):
         if not self._token or not self._expiry:
             return True
-        return datetime.now(timezone.utc) + timedelta(minutes=2) >= self._expiry
+        now_utc = datetime.now(timezone.utc)
+        expiry = self._expiry
+        if getattr(expiry, 'tzinfo', None) is None:
+            expiry = expiry.replace(tzinfo=timezone.utc)
+        return now_utc + timedelta(minutes=2) >= expiry
 
     def _refresh_locked(self):
         self._credentials.refresh(Request())
         self._token = self._credentials.token
-        self._expiry = getattr(self._credentials, 'expiry', datetime.now(timezone.utc) + timedelta(minutes=10))
+        exp = getattr(self._credentials, 'expiry', None)
+        if exp is None:
+            exp = datetime.now(timezone.utc) + timedelta(minutes=10)
+        elif getattr(exp, 'tzinfo', None) is None:
+            exp = exp.replace(tzinfo=timezone.utc)
+        self._expiry = exp
         return self._token
 
     def get_access_token(self):

@@ -57,6 +57,12 @@ class VideoGenerationViewSet(viewsets.GenericViewSet):
         serializer = VideoGenerationRequestSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
+        img = data.get('image_url', '')
+        if isinstance(img, str):
+            data['image_url'] = img.strip().strip('`').strip()
+        title = data.get('product_title', '')
+        if isinstance(title, str):
+            data['product_title'] = ' '.join(title.split())
         pos = data.get('avatar_position', {})
         job = VideoJob.objects.create(
             user=request.user,

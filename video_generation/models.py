@@ -29,7 +29,7 @@ class VideoJob(models.Model):
     veo_video_url = models.URLField(blank=True)
     heygen_video_id = models.CharField(max_length=255, blank=True)
     heygen_asset_id = models.CharField(max_length=255, blank=True)
-    final_video_url = models.URLField(blank=True)
+    final_video_url = models.URLField(blank=True, max_length=2048)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     completed_at = models.DateTimeField(blank=True, null=True)

@@ -17,6 +17,16 @@ def _download_to_temp(url: str) -> str:
                 f.write(chunk)
     return path
 
+def _download_audio_to_temp(url: str) -> str:
+    fd, path = tempfile.mkstemp(suffix='.mp3')
+    os.close(fd)
+    with httpx.stream('GET', url, timeout=120) as r:
+        r.raise_for_status()
+        with open(path, 'wb') as f:
+            for chunk in r.iter_bytes():
+                f.write(chunk)
+    return path
+
 def _concat_with_ffmpeg(paths: list[str]) -> str:
     if shutil.which('ffmpeg') is None:
         raise RuntimeError('FFmpeg is not installed or not in PATH. Install ffmpeg to enable scene merging.')
@@ -30,7 +40,7 @@ def _concat_with_ffmpeg(paths: list[str]) -> str:
     (
         ffmpeg
         .input(list_path, format='concat', safe=0)
-        .output(out_path, c='copy')
+        .output(out_path, c='copy', an=None)
         .run(quiet=True, overwrite_output=True)
     )
     os.remove(list_path)
@@ -55,3 +65,50 @@ def merge_scene_urls_to_gcs(scene_urls: list[str], target_gcs_uri: str) -> str:
     temp_paths = [_download_to_temp(url) for url in scene_urls]
     merged_path = _concat_with_ffmpeg(temp_paths)
     return _upload_to_gcs(merged_path, target_gcs_uri)
+
+def add_background_music_to_video(video_url: str, music_url: str, target_gcs_uri: str, music_volume: float = 0.25) -> str:
+    if shutil.which('ffmpeg') is None:
+        raise RuntimeError('FFmpeg is not installed or not in PATH. Install ffmpeg to enable audio mixing.')
+    vpath = _download_to_temp(video_url)
+    mpath = _download_audio_to_temp(music_url)
+    out_fd, out_path = tempfile.mkstemp(suffix='.mp4')
+    os.close(out_fd)
+    v = ffmpeg.input(vpath)
+    m = ffmpeg.input(mpath, stream_loop=-1)
+    a_music = m.audio.filter('volume', music_volume)
+    has_voice_audio = False
+    try:
+        info = ffmpeg.probe(vpath)
+        streams = info.get('streams', [])
+        for s in streams:
+            if s.get('codec_type') == 'audio':
+                has_voice_audio = True
+                break
+    except Exception:
+        has_voice_audio = True
+    try:
+        if has_voice_audio:
+            a_out = ffmpeg.filter([v.audio, a_music], 'amix', inputs=2, duration='first', dropout_transition=2)
+        else:
+            a_out = a_music
+        (
+            ffmpeg
+            .output(v.video, a_out, out_path, c='copy', c_a='aac', shortest=1)
+            .run(quiet=True, overwrite_output=True)
+        )
+    except ffmpeg.Error as e:
+        msg = ""
+        try:
+            msg = e.stderr.decode('utf-8') if hasattr(e, 'stderr') and e.stderr else str(e)
+        except Exception:
+            msg = str(e)
+        raise RuntimeError(f"FFmpeg mix failed: {msg}")
+    try:
+        os.remove(vpath)
+    except Exception:
+        pass
+    try:
+        os.remove(mpath)
+    except Exception:
+        pass
+    return _upload_to_gcs(out_path, target_gcs_uri)

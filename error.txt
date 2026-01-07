@@ -1,0 +1,102 @@
+oree@vps-69606f:/var/www/renderly/video_generation$ ^C
+oree@vps-69606f:/var/www/renderly/video_generation$ sudo systemctl stop celery-worker-renderly
+oree@vps-69606f:/var/www/renderly/video_generation$ sudo systemctl stop gunicorn-renderly
+oree@vps-69606f:/var/www/renderly/video_generation$ sudo systemctl start gunicorn-renderly
+oree@vps-69606f:/var/www/renderly/video_generation$ sudo systemctl start celery-worker-renderly
+oree@vps-69606f:/var/www/renderly/video_generation$ sudo journalctl -u gunicorn-renderly -u celery-worker-renderly -f
+Jan 07 06:49:08 vps-69606f celery[1419654]: - ** ---------- .> results:     redis://localhost:6379/0
+Jan 07 06:49:08 vps-69606f celery[1419654]: - *** --- * --- .> concurrency: 4 (prefork)
+Jan 07 06:49:08 vps-69606f celery[1419654]: -- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+Jan 07 06:49:08 vps-69606f celery[1419654]: --- ***** -----
+Jan 07 06:49:08 vps-69606f celery[1419654]:  -------------- [queues]
+Jan 07 06:49:08 vps-69606f celery[1419654]:                 .> renderly         exchange=renderly(direct) key=renderly
+Jan 07 06:49:08 vps-69606f celery[1419654]:
+Jan 07 06:49:08 vps-69606f celery[1419654]: [tasks]
+Jan 07 06:49:08 vps-69606f celery[1419654]:   . renderly.celery.debug_task
+Jan 07 06:49:08 vps-69606f celery[1419654]:   . video_generation.tasks.process_video_job
+Jan 07 06:50:17 vps-69606f gunicorn[1419644]: /var/www/renderly/venv/lib/python3.10/site-packages/google/api_core/_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.12) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+Jan 07 06:50:17 vps-69606f gunicorn[1419644]:   warnings.warn(message, FutureWarning)
+Jan 07 06:50:19 vps-69606f gunicorn[1419644]: HTTP Request: GET https://m.media-amazon.com/images/I/61aPY8odPSL._AC_SX342_SY445_QL70_FMwebp_.jpg "HTTP/1.1 200 OK"
+Jan 07 06:50:21 vps-69606f gunicorn[1419644]: HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1/projects/auralis-gcsp/locations/us-central1/publishers/google/models/veo-3.1-fast-generate-001:predictLongRunning "HTTP/1.1 400 Bad Request"
+Jan 07 06:50:22 vps-69606f gunicorn[1419644]: HTTP Request: POST https://us-central1-aiplatform.googleapis.com/v1/projects/auralis-gcsp/locations/us-central1/publishers/google/models/veo-3.1-fast-generate-001:predictLongRunning "HTTP/1.1 200 OK"
+Jan 07 06:50:23 vps-69606f gunicorn[1419644]: HTTP Request: GET https://us-central1-aiplatform.googleapis.com/v1/projects/auralis-gcsp/locations/us-central1/publishers/google/models/veo-3.1-fast-generate-001/operations/202e9d8a-e114-4488-826b-84c9589db406 "HTTP/1.1 404 Not Found"
+Jan 07 06:50:23 vps-69606f gunicorn[1419644]: HTTP Request: HEAD https://storage.googleapis.com/auralis-veo-bucket/P-15/2026-01-07/scene_1/202e9d8a-e114-4488-826b-84c9589db406/sample_0.mp4 "HTTP/1.1 404 Not Found"
+Jan 07 06:50:24 vps-69606f gunicorn[1419644]: HTTP Request: HEAD https://storage.googleapis.com/auralis-veo-bucket/P-15/2026-01-07/scene_1/sample_0.mp4 "HTTP/1.1 404 Not Found"
+Jan 07 06:50:24 vps-69606f gunicorn[1419644]: HTTP Request: GET https://storage.googleapis.com/storage/v1/b/auralis-veo-bucket/o?prefix=P-15%2F2026-01-07%2Fscene_1%2F "HTTP/1.1 200 OK"
+Jan 07 06:50:30 vps-69606f gunicorn[1419644]: HTTP Request: GET https://us-central1-aiplatform.googleapis.com/v1/projects/auralis-gcsp/locations/us-central1/publishers/google/models/veo-3.1-fast-generate-001/operations/202e9d8a-e114-4488-826b-84c9589db406 "HTTP/1.1 404 Not Found"
+Jan 07 06:50:30 vps-69606f gunicorn[1419644]: HTTP Request: HEAD https://storage.googleapis.com/auralis-veo-bucket/P-15/2026-01-07/scene_1/202e9d8a-e114-4488-826b-84c9589db406/sample_0.mp4 "HTTP/1.1 404 Not Found"
+Jan 07 06:50:30 vps-69606f gunicorn[1419644]: HTTP Request: HEAD https://storage.googleapis.com/auralis-veo-bucket/P-15/2026-01-07/scene_1/sample_0.mp4 "HTTP/1.1 404 Not Found"
+Jan 07 06:50:30 vps-69606f gunicorn[1419644]: HTTP Request: GET https://storage.googleapis.com/storage/v1/b/auralis-veo-bucket/o?prefix=P-15%2F2026-01-07%2Fscene_1%2F "HTTP/1.1 200 OK"
+Jan 07 06:50:36 vps-69606f gunicorn[1419644]: HTTP Request: GET https://us-central1-aiplatform.googleapis.com/v1/projects/auralis-gcsp/locations/us-central1/publishers/google/models/veo-3.1-fast-generate-001/operations/202e9d8a-e114-4488-826b-84c9589db406 "HTTP/1.1 404 Not Found"
+Jan 07 06:50:37 vps-69606f gunicorn[1419644]: HTTP Request: HEAD https://storage.googleapis.com/auralis-veo-bucket/P-15/2026-01-07/scene_1/202e9d8a-e114-4488-826b-84c9589db406/sample_0.mp4 "HTTP/1.1 404 Not Found"
+Jan 07 06:50:37 vps-69606f gunicorn[1419644]: HTTP Request: HEAD https://storage.googleapis.com/auralis-veo-bucket/P-15/2026-01-07/scene_1/sample_0.mp4 "HTTP/1.1 404 Not Found"
+Jan 07 06:50:37 vps-69606f gunicorn[1419644]: HTTP Request: GET https://storage.googleapis.com/storage/v1/b/auralis-veo-bucket/o?prefix=P-15%2F2026-01-07%2Fscene_1%2F "HTTP/1.1 200 OK"
+Jan 07 06:50:43 vps-69606f gunicorn[1419642]: /var/www/renderly/venv/lib/python3.10/site-packages/google/api_core/_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.12) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+Jan 07 06:50:43 vps-69606f gunicorn[1419642]:   warnings.warn(message, FutureWarning)
+Jan 07 06:50:44 vps-69606f gunicorn[1419644]: HTTP Request: GET https://us-central1-aiplatform.googleapis.com/v1/projects/auralis-gcsp/locations/us-central1/publishers/google/models/veo-3.1-fast-generate-001/operations/202e9d8a-e114-4488-826b-84c9589db406 "HTTP/1.1 404 Not Found"
+Jan 07 06:50:44 vps-69606f gunicorn[1419644]: HTTP Request: HEAD https://storage.googleapis.com/auralis-veo-bucket/P-15/2026-01-07/scene_1/202e9d8a-e114-4488-826b-84c9589db406/sample_0.mp4 "HTTP/1.1 404 Not Found"
+Jan 07 06:50:44 vps-69606f gunicorn[1419644]: HTTP Request: HEAD https://storage.googleapis.com/auralis-veo-bucket/P-15/2026-01-07/scene_1/sample_0.mp4 "HTTP/1.1 404 Not Found"
+Jan 07 06:50:44 vps-69606f gunicorn[1419644]: HTTP Request: GET https://storage.googleapis.com/storage/v1/b/auralis-veo-bucket/o?prefix=P-15%2F2026-01-07%2Fscene_1%2F "HTTP/1.1 200 OK"
+Jan 07 06:50:50 vps-69606f gunicorn[1419644]: HTTP Request: GET https://us-central1-aiplatform.googleapis.com/v1/projects/auralis-gcsp/locations/us-central1/publishers/google/models/veo-3.1-fast-generate-001/operations/202e9d8a-e114-4488-826b-84c9589db406 "HTTP/1.1 404 Not Found"
+Jan 07 06:50:50 vps-69606f gunicorn[1419644]: HTTP Request: HEAD https://storage.googleapis.com/auralis-veo-bucket/P-15/2026-01-07/scene_1/202e9d8a-e114-4488-826b-84c9589db406/sample_0.mp4 "HTTP/1.1 404 Not Found"
+Jan 07 06:50:50 vps-69606f gunicorn[1419644]: HTTP Request: HEAD https://storage.googleapis.com/auralis-veo-bucket/P-15/2026-01-07/scene_1/sample_0.mp4 "HTTP/1.1 404 Not Found"
+Jan 07 06:50:50 vps-69606f gunicorn[1419644]: HTTP Request: GET https://storage.googleapis.com/storage/v1/b/auralis-veo-bucket/o?prefix=P-15%2F2026-01-07%2Fscene_1%2F "HTTP/1.1 200 OK"
+Jan 07 06:50:56 vps-69606f gunicorn[1419644]: HTTP Request: GET https://us-central1-aiplatform.googleapis.com/v1/projects/auralis-gcsp/locations/us-central1/publishers/google/models/veo-3.1-fast-generate-001/operations/202e9d8a-e114-4488-826b-84c9589db406 "HTTP/1.1 404 Not Found"
+Jan 07 06:50:56 vps-69606f gunicorn[1419644]: HTTP Request: HEAD https://storage.googleapis.com/auralis-veo-bucket/P-15/2026-01-07/scene_1/202e9d8a-e114-4488-826b-84c9589db406/sample_0.mp4 "HTTP/1.1 404 Not Found"
+Jan 07 06:50:56 vps-69606f gunicorn[1419644]: HTTP Request: HEAD https://storage.googleapis.com/auralis-veo-bucket/P-15/2026-01-07/scene_1/sample_0.mp4 "HTTP/1.1 404 Not Found"
+Jan 07 06:50:56 vps-69606f gunicorn[1419644]: HTTP Request: GET https://storage.googleapis.com/storage/v1/b/auralis-veo-bucket/o?prefix=P-15%2F2026-01-07%2Fscene_1%2F "HTTP/1.1 200 OK"
+Jan 07 06:51:02 vps-69606f gunicorn[1419644]: HTTP Request: GET https://us-central1-aiplatform.googleapis.com/v1/projects/auralis-gcsp/locations/us-central1/publishers/google/models/veo-3.1-fast-generate-001/operations/202e9d8a-e114-4488-826b-84c9589db406 "HTTP/1.1 404 Not Found"
+Jan 07 06:51:02 vps-69606f gunicorn[1419644]: HTTP Request: HEAD https://storage.googleapis.com/auralis-veo-bucket/P-15/2026-01-07/scene_1/202e9d8a-e114-4488-826b-84c9589db406/sample_0.mp4 "HTTP/1.1 404 Not Found"
+Jan 07 06:51:02 vps-69606f gunicorn[1419644]: HTTP Request: HEAD https://storage.googleapis.com/auralis-veo-bucket/P-15/2026-01-07/scene_1/sample_0.mp4 "HTTP/1.1 404 Not Found"
+Jan 07 06:51:03 vps-69606f gunicorn[1419644]: HTTP Request: GET https://storage.googleapis.com/storage/v1/b/auralis-veo-bucket/o?prefix=P-15%2F2026-01-07%2Fscene_1%2F "HTTP/1.1 200 OK"
+Jan 07 06:51:09 vps-69606f gunicorn[1419644]: HTTP Request: GET https://us-central1-aiplatform.googleapis.com/v1/projects/auralis-gcsp/locations/us-central1/publishers/google/models/veo-3.1-fast-generate-001/operations/202e9d8a-e114-4488-826b-84c9589db406 "HTTP/1.1 404 Not Found"
+Jan 07 06:51:09 vps-69606f gunicorn[1419644]: HTTP Request: HEAD https://storage.googleapis.com/auralis-veo-bucket/P-15/2026-01-07/scene_1/202e9d8a-e114-4488-826b-84c9589db406/sample_0.mp4 "HTTP/1.1 404 Not Found"
+Jan 07 06:51:09 vps-69606f gunicorn[1419644]: HTTP Request: HEAD https://storage.googleapis.com/auralis-veo-bucket/P-15/2026-01-07/scene_1/sample_0.mp4 "HTTP/1.1 404 Not Found"
+Jan 07 06:51:09 vps-69606f gunicorn[1419644]: HTTP Request: GET https://storage.googleapis.com/storage/v1/b/auralis-veo-bucket/o?prefix=P-15%2F2026-01-07%2Fscene_1%2F "HTTP/1.1 200 OK"
+Jan 07 06:51:15 vps-69606f gunicorn[1419644]: HTTP Request: GET https://us-central1-aiplatform.googleapis.com/v1/projects/auralis-gcsp/locations/us-central1/publishers/google/models/veo-3.1-fast-generate-001/operations/202e9d8a-e114-4488-826b-84c9589db406 "HTTP/1.1 404 Not Found"
+Jan 07 06:51:15 vps-69606f gunicorn[1419644]: HTTP Request: HEAD https://storage.googleapis.com/auralis-veo-bucket/P-15/2026-01-07/scene_1/202e9d8a-e114-4488-826b-84c9589db406/sample_0.mp4 "HTTP/1.1 404 Not Found"
+Jan 07 06:51:16 vps-69606f gunicorn[1419644]: HTTP Request: HEAD https://storage.googleapis.com/auralis-veo-bucket/P-15/2026-01-07/scene_1/sample_0.mp4 "HTTP/1.1 404 Not Found"
+Jan 07 06:51:16 vps-69606f gunicorn[1419644]: HTTP Request: GET https://storage.googleapis.com/storage/v1/b/auralis-veo-bucket/o?prefix=P-15%2F2026-01-07%2Fscene_1%2F "HTTP/1.1 200 OK"
+Jan 07 06:51:40 vps-69606f gunicorn[1419644]: Task video_generation.tasks.process_video_job[79ae46f9-657f-434c-ad9d-e0d2a1f9ddcb] succeeded in 81.99864724092185s: None
+Jan 07 06:51:44 vps-69606f gunicorn[1419642]: Not Found: /
+Jan 07 06:51:44 vps-69606f gunicorn[1419642]: Not Found: /
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]: Not Found: /_next
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]: Not Found: /_next
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]: Internal Server Error: /api
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]: Traceback (most recent call last):
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]:   File "/var/www/renderly/venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]:     response = get_response(request)
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]:   File "/var/www/renderly/venv/lib/python3.10/site-packages/django/utils/deprecation.py", line 136, in __call__
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]:     response = self.process_response(request, response)
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]:   File "/var/www/renderly/venv/lib/python3.10/site-packages/django/middleware/common.py", line 108, in process_response
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]:     return self.response_redirect_class(self.get_full_path_with_slash(request))
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]:   File "/var/www/renderly/venv/lib/python3.10/site-packages/django/middleware/common.py", line 87, in get_full_path_with_slash
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]:     raise RuntimeError(
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]: RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 45.8.224.170:8001/api/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]: Internal Server Error: /api
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]: Traceback (most recent call last):
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]:   File "/var/www/renderly/venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]:     response = get_response(request)
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]:   File "/var/www/renderly/venv/lib/python3.10/site-packages/django/utils/deprecation.py", line 136, in __call__
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]:     response = self.process_response(request, response)
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]:   File "/var/www/renderly/venv/lib/python3.10/site-packages/django/middleware/common.py", line 108, in process_response
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]:     return self.response_redirect_class(self.get_full_path_with_slash(request))
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]:   File "/var/www/renderly/venv/lib/python3.10/site-packages/django/middleware/common.py", line 87, in get_full_path_with_slash
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]:     raise RuntimeError(
+Jan 07 06:51:44 vps-69606f gunicorn[1419644]: RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 45.8.224.170:8001/api/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+Jan 07 06:51:45 vps-69606f gunicorn[1419644]: Not Found: /_next/server
+Jan 07 06:51:45 vps-69606f gunicorn[1419644]: Not Found: /_next/server
+Jan 07 06:51:46 vps-69606f gunicorn[1419643]: /var/www/renderly/venv/lib/python3.10/site-packages/google/api_core/_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.12) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+Jan 07 06:51:46 vps-69606f gunicorn[1419643]:   warnings.warn(message, FutureWarning)
+Jan 07 06:51:46 vps-69606f gunicorn[1419643]: Not Found: /app
+Jan 07 06:51:46 vps-69606f gunicorn[1419643]: Not Found: /app
+Jan 07 06:51:46 vps-69606f gunicorn[1419643]: Not Found: /api/route
+Jan 07 06:51:46 vps-69606f gunicorn[1419643]: Not Found: /api/route
+^C
+oree@vps-69606f:/var/www/renderly/video_generation$
+
+
+
+
+
+
